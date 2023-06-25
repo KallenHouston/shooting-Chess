@@ -86,9 +86,12 @@ public class Chesspieces : MonoBehaviour
 
     private void OnMouseUp()
     {
-        DestroyMovePlates();
+        if(!control.GetComponent<Game>().GameOver() && control.GetComponent<Game>().GetCurrentPlayer() == player)
+        {
+            DestroyMovePlates();
 
-        InitMovePlates();
+            InitMovePlates();
+        }
     }
 
     public void DestroyMovePlates()

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -39,7 +41,7 @@ public class Game : MonoBehaviour
 
     public GameObject Create(string name, int x, int y)
     {
-        GameObject obj = Instantiate(Piece, new Vector3(0,0,-1), Quaternion.identity);
+        GameObject obj = Instantiate(Piece, new Vector3(0, 0, -1), Quaternion.identity);
         Chesspieces cm = obj.GetComponent<Chesspieces>();
         cm.name = name;
         cm.boardXSet(x);
@@ -50,27 +52,68 @@ public class Game : MonoBehaviour
 
     public void SetPos(GameObject obj)
     {
-        Chesspieces cm = obj.GetComponent<Chesspieces> ();
+        Chesspieces cm = obj.GetComponent<Chesspieces>();
 
         positions[cm.boardXGet(), cm.boardYGet()] = obj;
     }
 
-    public void SetPosEmpty(int x,  int y)
+    public void SetPosEmpty(int x, int y)
     {
         positions[x, y] = null;
-    }    
+    }
 
-    public GameObject GetPos(int x, int y) 
+    public GameObject GetPos(int x, int y)
     {
         return positions[x, y];
     }
 
     public bool PosOnBoard(int x, int y)
     {
-        if (x < 0 || y < 0 || x >= positions.GetLength(0) || y >= positions.GetLength(1)) 
+        if (x < 0 || y < 0 || x >= positions.GetLength(0) || y >= positions.GetLength(1))
         {
             return false;
-        } 
+        }
         return true;
+    }
+
+    public string GetCurrentPlayer()
+    {
+        return currentPlayer;
+    }
+
+    public bool GameOver()
+    {
+        return gameOver;
+    }
+
+    public void isTurn()
+    {
+        if (currentPlayer == "white")
+        {
+            currentPlayer = "black";
+        } 
+        else
+        {
+            currentPlayer = "white";
+        }
+    }
+    public void Update()
+    {
+        if (gameOver == true && Input.GetMouseButtonDown(0))
+        {
+            gameOver = false;
+
+            SceneManager.LoadScene("Chess");
+        }
+    }
+
+    public void Win(string playerwin)
+    {
+        gameOver = true;
+
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerwin + " is the winner!!!";
+
+        GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
     }
 }
